@@ -1,0 +1,16 @@
+#PROJECT_NAME: 'selfie2anime_fcgan'
+PROJECT_NAME: 'default'
+SEED_VALUE: -1
+MODEL:
+  netG: fcv
+  netD: basic
+TRAINING:
+  n_epochs: 60
+  batch_size: 4
+OPTIMIZER:
+  lambda_A: 10
+  lambda_B: 10
+  lambda_identity: 0.5
+  lr: 1e-4
+  beta1: 0.5
+  wd: 0
