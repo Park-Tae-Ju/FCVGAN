@@ -429,8 +429,10 @@ class FourierComplexValueGenerator(nn.Module):
         feature = self.resnet_blocks(feature)
 
         # Content
-        x_content = F.relu(self.deconv1_norm_content(self.deconv1_content(feature)))
-        x_content = F.relu(self.deconv2_norm_content(self.deconv2_content(x_content)))
+        x_content = self.sfa1(feature)
+        x_content = self.sfa2(x_content)
+        # x_content = F.relu(self.deconv1_norm_content(self.deconv1_content(feature)))
+        # x_content = F.relu(self.deconv2_norm_content(self.deconv2_content(x_content)))
         x_content = F.pad(x_content, (3, 3, 3, 3), 'reflect')
         content = self.deconv3_content(x_content)
         image = self.tanh(content)
@@ -446,12 +448,12 @@ class FourierComplexValueGenerator(nn.Module):
         image9 = image[:, 24:27, :, :]
 
         # Attention
-        x_attention = self.sfa1(feature)
-        x_attention = self.sfa2(x_attention)
-        # x_attention = self.sfa1(x)
+        # x_attention = self.sfa1(feature)
         # x_attention = self.sfa2(x_attention)
-        # x_attention = F.relu(self.deconv1_norm_attention(self.deconv1_attention(feature)))
-        # x_attention = F.relu(self.deconv2_norm_attention(self.deconv2_attention(x_attention)))
+        # # x_attention = self.sfa1(x)
+        # # x_attention = self.sfa2(x_attention)
+        x_attention = F.relu(self.deconv1_norm_attention(self.deconv1_attention(feature)))
+        x_attention = F.relu(self.deconv2_norm_attention(self.deconv2_attention(x_attention)))
         attention = self.deconv3_attention(x_attention)
         softmax_ = torch.nn.Softmax(dim=1)
         attention = softmax_(attention)
